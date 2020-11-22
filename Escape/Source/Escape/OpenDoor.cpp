@@ -20,12 +20,6 @@ void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	FRotator OpenDoor = {0.f, 90.f, 0.f};
-	GetOwner()->SetActorRotation(OpenDoor);
-
-	FString ShowRotation = OpenDoor.ToString();
-	UE_LOG(LogType, Warning, TEXT("Current rotation of door is: %s"), *ShowRotation);
-
 }
 
 
@@ -34,6 +28,8 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+	FRotator OpenDoor(0.f, 90.f, 0.f);
+	GetOwner()->SetActorRotation(OpenDoor);
+	UE_LOG(LogTemp, Warning, TEXT("Future door rotation: %f"), TargetYaw);
 }
 
