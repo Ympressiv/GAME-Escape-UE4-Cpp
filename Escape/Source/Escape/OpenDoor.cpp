@@ -25,12 +25,10 @@ void UOpenDoor::BeginPlay()
 	UE_LOG(LogType, Warning, TEXT("Rotation of door is: %s"), *DoorRotation);
 
 	FRotator CurrentY_DoorRotation = GetOwner()->GetActorRotation();
-	UE_LOG(LogType, Warning, TEXT("Current rotation of door is: %s"), *DoorRotation);
-	float NewX_DoorRotation = CurrentY_DoorRotation.Yaw +90;
-	FString NewY_DoorRotation = GetOwner()->GetActorRotation().ToString();
-	FRotator New1Y_DoorRotation = GetOwner()->GetActorRotation();
-	GetOwner()->SetActorRotation(New1Y_DoorRotation);
-	UE_LOG(LogType, Warning, TEXT("+1 Current rotation of door is: %s"), *NewY_DoorRotation);
+	FRotator CurrentY_DoorRotation{ 0.f,90.f,0.f };
+	FRotator* Y_Door = &CurrentY_DoorRotation;
+	Y_Door-> ToString();
+	UE_LOG(LogType, Warning, TEXT("+1 Current rotation of door is: %s"), **Y_Door);
 
 }
 
