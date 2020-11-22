@@ -20,15 +20,11 @@ void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	float MyFloat = 90.f;
-	FString DoorRotation = GetOwner()->GetActorRotation().ToString();
-	UE_LOG(LogType, Warning, TEXT("Rotation of door is: %s"), *DoorRotation);
+	FRotator OpenDoor = {0.f, 90.f, 0.f};
+	GetOwner()->SetActorRotation(OpenDoor);
 
-	FRotator CurrentY_DoorRotation = GetOwner()->GetActorRotation();
-	FRotator CurrentY_DoorRotation{ 0.f,90.f,0.f };
-	FRotator* Y_Door = &CurrentY_DoorRotation;
-	Y_Door-> ToString();
-	UE_LOG(LogType, Warning, TEXT("+1 Current rotation of door is: %s"), **Y_Door);
+	FString ShowRotation = OpenDoor.ToString();
+	UE_LOG(LogType, Warning, TEXT("Current rotation of door is: %s"), *ShowRotation);
 
 }
 
