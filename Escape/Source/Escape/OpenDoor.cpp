@@ -19,22 +19,19 @@ UOpenDoor::UOpenDoor()
 void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
-	OpenDoorYaw;
-
 }
-
 
 // Called every frame
 void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	OpenTheDoor();
+}
+void UOpenDoor::OpenTheDoor()
+{
 	CurrentRotation = GetOwner()->GetActorRotation().Yaw;
 	OpenDoorYaw = FMath::Lerp(CurrentRotation, TargetYaw, 0.01);
 	FRotator OpenDoor(0.f, OpenDoorYaw, 0.f);
 	UE_LOG(LogTemp, Display, TEXT("%f"), OpenDoorYaw);
 	GetOwner()->SetActorRotation(OpenDoor);
-
-	
-
 }
-

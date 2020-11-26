@@ -25,6 +25,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 private:
+	void OpenTheDoor();
 	float CurrentRotation;
 	float TargetYaw = 74.f;
 	float OpenDoorYaw;
