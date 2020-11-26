@@ -26,8 +26,10 @@ public:
 
 private:
 	void OpenTheDoor();
-	float CurrentRotation;
-	float TargetYaw = 74.f;
+	void InitialValue();
+	float CurrentYaw;
+	float TargetYaw;
+	float InitialYaw;
 	float OpenDoorYaw;
 		
 };
