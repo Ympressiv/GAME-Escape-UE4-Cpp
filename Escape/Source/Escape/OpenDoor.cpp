@@ -40,5 +40,5 @@ void UOpenDoor::OpenTheDoor()
 void UOpenDoor::InitialValue()
 {
 	InitialYaw = GetOwner()->GetActorRotation().Yaw;
-	TargetYaw = InitialYaw + 74.f;
+	TargetYaw += InitialYaw;
 }

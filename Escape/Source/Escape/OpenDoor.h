@@ -28,8 +28,11 @@ private:
 	void OpenTheDoor();
 	void InitialValue();
 	float CurrentYaw;
-	float TargetYaw;
 	float InitialYaw;
 	float OpenDoorYaw;
+
+	UPROPERTY(EditAnywhere)
+	float TargetYaw = 74.f;
+
 		
 };
