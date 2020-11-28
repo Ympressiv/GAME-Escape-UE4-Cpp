@@ -26,12 +26,12 @@ void UOpenDoor::BeginPlay()
 void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	OpenTheDoor();
+	OpenTheDoor(DeltaTime);
 }
-void UOpenDoor::OpenTheDoor()
+void UOpenDoor::OpenTheDoor(float FPSLimit)
 {
 	CurrentYaw = GetOwner()->GetActorRotation().Yaw;
-	OpenDoorYaw = FMath::Lerp(CurrentYaw, TargetYaw, 0.01);
+	OpenDoorYaw = FMath::Lerp(CurrentYaw, TargetYaw, FPSLimit * 0.5f);
 	FRotator OpenDoor(0.f, OpenDoorYaw, 0.f);
 	UE_LOG(LogTemp, Display, TEXT("%f"), OpenDoorYaw);
 	GetOwner()->SetActorRotation(OpenDoor);
