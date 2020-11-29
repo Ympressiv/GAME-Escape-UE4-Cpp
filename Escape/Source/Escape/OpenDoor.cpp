@@ -26,7 +26,16 @@ void UOpenDoor::BeginPlay()
 void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	OpenTheDoor(DeltaTime);
+
+	if (PressurePlate->IsOverlappingActor(ObjectThatOpenDoor))
+	{
+		OpenTheDoor(DeltaTime);
+	}
+	//else
+	if (!PressurePlate->IsOverlappingActor(ObjectThatOpenDoor))
+	{
+		CloseTheDoor(DeltaTime);
+	}
 }
 void UOpenDoor::OpenTheDoor(float FPSLimit)
 {
@@ -35,7 +44,11 @@ void UOpenDoor::OpenTheDoor(float FPSLimit)
 	FRotator OpenDoor(0.f, OpenDoorYaw, 0.f);
 	UE_LOG(LogTemp, Display, TEXT("%f"), OpenDoorYaw);
 	GetOwner()->SetActorRotation(OpenDoor);
-
+}
+void UOpenDoor::CloseTheDoor(float FPSLimit)
+{
+	CurrentYaw = GetOwner()->GetActorRotation().Yaw;
+	CloseDoorYaw = FMath::Lerp(CurrentYaw, InitialYaw, FPSLimit * 0.5f);
 }
 void UOpenDoor::InitialValue()
 {
