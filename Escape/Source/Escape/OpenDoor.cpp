@@ -1,6 +1,8 @@
 // Copyright - Jakub Michalewicz 2020
 
 
+#include "Engine/World.h"
+#include "GameFramework/PlayerController.h"
 #include "OpenDoor.h"
 #include "GameFramework/Actor.h"
 
@@ -20,6 +22,11 @@ void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
 	InitialValue();
+	if (!PressurePlate)
+	{
+		UE_LOG(LogTemp, Error, TEXT("%s has OpenDoor component on it but no pressureplate set!"), *GetOwner()->GetName());
+	}
+	ObjectThatOpenDoor = GetWorld()->GetFirstPlayerController()->GetPawn();
 }
 
 // Called every frame
@@ -27,12 +34,12 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (PressurePlate->IsOverlappingActor(ObjectThatOpenDoor))
+	if (PressurePlate && PressurePlate->IsOverlappingActor(ObjectThatOpenDoor))
 	{
 		OpenTheDoor(DeltaTime);
 	}
 	//else
-	if (!PressurePlate->IsOverlappingActor(ObjectThatOpenDoor))
+	if (PressurePlate && !PressurePlate->IsOverlappingActor(ObjectThatOpenDoor))
 	{
 		CloseTheDoor(DeltaTime);
 	}
