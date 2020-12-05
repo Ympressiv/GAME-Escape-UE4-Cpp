@@ -49,6 +49,8 @@ void UOpenDoor::CloseTheDoor(float FPSLimit)
 {
 	CurrentYaw = GetOwner()->GetActorRotation().Yaw;
 	CloseDoorYaw = FMath::Lerp(CurrentYaw, InitialYaw, FPSLimit * 0.5f);
+	FRotator CloseDoor(0.f, CloseDoorYaw, 0.f);
+	GetOwner()->SetActorRotation(CloseDoor);
 }
 void UOpenDoor::InitialValue()
 {
