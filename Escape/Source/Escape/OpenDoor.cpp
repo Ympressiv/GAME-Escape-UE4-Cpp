@@ -22,10 +22,7 @@ void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
 	InitialValue();
-	if (!PressurePlate)
-	{
-		UE_LOG(LogTemp, Error, TEXT("%s has OpenDoor component on it but no pressureplate set!"), *GetOwner()->GetName());
-	}
+	SecurePressurePlate();
 	ObjectThatOpenDoor = GetWorld()->GetFirstPlayerController()->GetPawn();
 }
 
@@ -33,33 +30,51 @@ void UOpenDoor::BeginPlay()
 void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	CurrentTime = GetWorld()->GetTimeSeconds();
+	UE_LOG(LogTemp, Display, TEXT("Current time in game is: %f"), CurrentTime);
 
-	if (PressurePlate && PressurePlate->IsOverlappingActor(ObjectThatOpenDoor))
-	{
-		OpenTheDoor(DeltaTime);
-	}
-	else
-	{
-		CloseTheDoor(DeltaTime);
-	}
+	PressurePlate_OpenClose_Door(DeltaTime);
+
 }
+
 void UOpenDoor::OpenTheDoor(float FPSLimit)
 {
 	CurrentYaw = GetOwner()->GetActorRotation().Yaw;
-	OpenDoorYaw = FMath::Lerp(CurrentYaw, TargetYaw, FPSLimit * 0.5f);
+	OpenDoorYaw = FMath::Lerp(CurrentYaw, OpenDoor_Angle, FPSLimit * DoorOpenSpeed);
 	FRotator OpenDoor(0.f, OpenDoorYaw, 0.f);
-	UE_LOG(LogTemp, Display, TEXT("%f"), OpenDoorYaw);
 	GetOwner()->SetActorRotation(OpenDoor);
 }
 void UOpenDoor::CloseTheDoor(float FPSLimit)
 {
 	CurrentYaw = GetOwner()->GetActorRotation().Yaw;
-	CloseDoorYaw = FMath::Lerp(CurrentYaw, InitialYaw, FPSLimit * 0.5f);
+	CloseDoorYaw = FMath::Lerp(CurrentYaw, InitialYaw, FPSLimit * DoorCloseSpeed);
 	FRotator CloseDoor(0.f, CloseDoorYaw, 0.f);
 	GetOwner()->SetActorRotation(CloseDoor);
 }
 void UOpenDoor::InitialValue()
 {
 	InitialYaw = GetOwner()->GetActorRotation().Yaw;
-	TargetYaw += InitialYaw;
+	OpenDoor_Angle += InitialYaw;
+}
+void UOpenDoor::SecurePressurePlate()
+{
+	if (!PressurePlate)
+	{
+		UE_LOG(LogTemp, Error, TEXT("%s has OpenDoor component on it but no pressureplate set!"), *GetOwner()->GetName());
+	}
+}
+void UOpenDoor::PressurePlate_OpenClose_Door(float FPSLimit)
+{
+	if (PressurePlate && PressurePlate->IsOverlappingActor(ObjectThatOpenDoor))
+	{
+		OpenTheDoor(FPSLimit);
+		DoorLastOpened = GetWorld()->GetTimeSeconds();
+	}
+	else
+	{
+		if (CurrentTime >= DoorLastOpened + DoorCloseDelay)
+		{
+			CloseTheDoor(FPSLimit);
+		}
+	}
 }

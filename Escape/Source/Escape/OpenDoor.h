@@ -27,20 +27,32 @@ public:
 	void OpenTheDoor(float FPSLimit);
 	void CloseTheDoor(float FPSLimit);
 	void InitialValue();
+	void SecurePressurePlate();
+	void PressurePlate_OpenClose_Door(float FPSLimit);
 
 private:
 	float CurrentYaw;
 	float InitialYaw;
 	float OpenDoorYaw;
 	float CloseDoorYaw;
+	float CurrentTime = 0.f;
+	float DoorLastOpened = 0.f;
 
 	UPROPERTY(EditAnywhere)
-	float TargetYaw = 74.f;
+	float OpenDoor_Angle = 74.f;
+
+	UPROPERTY(EditAnywhere)
+	float DoorCloseDelay = 5.f;
+
+	UPROPERTY(EditAnywhere)
+	float DoorOpenSpeed = 0.5f;
+
+	UPROPERTY(EditAnywhere)
+	float DoorCloseSpeed = 0.5f;
 
 	UPROPERTY(EditAnywhere)
 	ATriggerVolume* PressurePlate;
 
 	UPROPERTY(EditAnywhere)
 	AActor* ObjectThatOpenDoor;
-		
 };
