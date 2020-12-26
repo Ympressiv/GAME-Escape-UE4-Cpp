@@ -19,10 +19,10 @@ UWorldPosition::UWorldPosition()
 void UWorldPosition::BeginPlay()
 {
 	Super::BeginPlay();
-	//FString ObjectName = GetOwner()->GetName();
-	//FString ObjectPosition = GetOwner()->GetActorLocation().ToString();
-	//UE_LOG(LogTemp, Warning, TEXT("%s position in world is: %s"), *ObjectName, *ObjectPosition);
-	//UE_LOG(LogTemp, Warning, TEXT("Objects, whose having WorldPosiotion component, name are: %s"), *GetOwner()->GetName());
+	FString ObjectName = GetOwner()->GetName();
+	FString ObjectPosition = GetOwner()->GetActorLocation().ToString();
+	UE_LOG(LogTemp, Warning, TEXT("%s position in world is: %s"), *ObjectName, *ObjectPosition);
+	UE_LOG(LogTemp, Warning, TEXT("Objects, whose having WorldPosiotion component, name are: %s"), *GetOwner()->GetName());
 }
 
 

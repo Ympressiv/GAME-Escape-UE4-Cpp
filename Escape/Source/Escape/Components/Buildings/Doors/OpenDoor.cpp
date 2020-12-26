@@ -1,6 +1,5 @@
 // Copyright - Jakub Michalewicz 2020
 
-
 #include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
 #include "OpenDoor.h"
@@ -31,10 +30,9 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	CurrentTime = GetWorld()->GetTimeSeconds();
-	UE_LOG(LogTemp, Display, TEXT("Current time in game is: %f"), CurrentTime);
+	//UE_LOG(LogTemp, Display, TEXT("Current time in game is: %f"), CurrentTime);
 
 	PressurePlate_OpenClose_Door(DeltaTime);
-
 }
 
 void UOpenDoor::OpenTheDoor(float FPSLimit)

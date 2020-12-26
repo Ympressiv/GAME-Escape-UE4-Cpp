@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "Grabber.generated.h"
 
 
@@ -27,5 +28,6 @@ public:
 private:
 	FVector PlayerVievPoint_Location;
 	FRotator PlayerVievPoint_Rotation;
-		
+	float Reach = 100.f;
+	UPhysicsHandleComponent* PhysicsHandle = nullptr;
 };
