@@ -24,10 +24,11 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
+	void Grab();
 private:
 	FVector PlayerVievPoint_Location;
 	FRotator PlayerVievPoint_Rotation;
 	float Reach = 100.f;
 	UPhysicsHandleComponent* PhysicsHandle = nullptr;
+	UInputComponent* InputComponent = nullptr;
 };

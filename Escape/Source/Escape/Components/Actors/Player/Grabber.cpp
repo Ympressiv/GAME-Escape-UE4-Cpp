@@ -17,8 +17,6 @@ UGrabber::UGrabber()
 	// ...
 }
 
-
-// Called when the game starts
 void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
@@ -31,11 +29,13 @@ void UGrabber::BeginPlay()
 	{
 		UE_LOG(LogType, Error, TEXT("PhysincsHandle component is not attached to %s!"), *GetOwner()->GetName());
 	}
-	
+	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
+	if (InputComponent)
+	{
+		UE_LOG(LogType, Display, TEXT("Input component is found."));
+		InputComponent->BindAction("Grab", IE_Pressed , this, &UGrabber::Grab);
+	}
 }
-
-
-// Called every frame
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
@@ -72,4 +72,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 			UE_LOG(LogTemp, Error, TEXT("Now You are loking at: %s"), *(HittingActor->GetName()));
 		}
 }
-
+void UGrabber::Grab()
+{
+	UE_LOG(LogType, Warning, TEXT("You pressed: Grab"));
+}
