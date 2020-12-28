@@ -25,6 +25,7 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	void Grab();
+	void Drop();
 private:
 	FVector PlayerVievPoint_Location;
 	FRotator PlayerVievPoint_Rotation;

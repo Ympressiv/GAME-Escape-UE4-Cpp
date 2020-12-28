@@ -32,8 +32,8 @@ void UGrabber::BeginPlay()
 	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
 	if (InputComponent)
 	{
-		UE_LOG(LogType, Display, TEXT("Input component is found."));
 		InputComponent->BindAction("Grab", IE_Pressed , this, &UGrabber::Grab);
+		InputComponent->BindAction("Grab", IE_Released, this, &UGrabber::Drop);
 	}
 }
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -69,10 +69,14 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	AActor* HittingActor = OutHit.GetActor();
 	if (HittingActor)
 		{
-			UE_LOG(LogTemp, Error, TEXT("Now You are loking at: %s"), *(HittingActor->GetName()));
+			UE_LOG(LogType, Error, TEXT("Now You are loking at: %s"), *(HittingActor->GetName()));
 		}
 }
 void UGrabber::Grab()
 {
-	UE_LOG(LogType, Warning, TEXT("You pressed: Grab"));
+	UE_LOG(LogType, Warning, TEXT("Action: Grab! You pressed: Grab button"));
+}
+void UGrabber::Drop()
+{
+	UE_LOG(LogType, Warning, TEXT("Action: Drop! You released: Grab button!"));
 }
