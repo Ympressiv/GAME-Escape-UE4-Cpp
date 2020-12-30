@@ -28,6 +28,9 @@ protected:
 private:
 	float Reach = 100.f;
 	FHitResult GetFirstPhysicsBodyInReach() const;
+	FVector PlayerVievPoint_Stats() const;
+	FVector GetPlayerWorldLocation() const;
 	UPhysicsHandleComponent* PhysicsHandle = nullptr;
 	UInputComponent* InputComponent = nullptr;
+
 };
