@@ -16,20 +16,18 @@ class ESCAPE_API UGrabber : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UGrabber();
-
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
-
-public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	void Grab();
 	void Drop();
+	void FindPhysicsHandle();
+	void SetupInputComponent();
+protected:
+	// Called when the game starts
+	virtual void BeginPlay() override;
 private:
-	FVector PlayerVievPoint_Location;
-	FRotator PlayerVievPoint_Rotation;
 	float Reach = 100.f;
+	FHitResult GetFirstPhysicsBodyInReach() const;
 	UPhysicsHandleComponent* PhysicsHandle = nullptr;
 	UInputComponent* InputComponent = nullptr;
 };
