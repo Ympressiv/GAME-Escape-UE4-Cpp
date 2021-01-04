@@ -32,5 +32,4 @@ private:
 	FVector GetPlayerWorldLocation() const;
 	UPhysicsHandleComponent* PhysicsHandle = nullptr;
 	UInputComponent* InputComponent = nullptr;
-
 };

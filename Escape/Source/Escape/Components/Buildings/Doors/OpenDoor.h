@@ -16,12 +16,6 @@ class ESCAPE_API UOpenDoor : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UOpenDoor();
-
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
-
-public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	void OpenTheDoor(float FPSLimit);
@@ -29,6 +23,11 @@ public:
 	void InitialValue();
 	void SecurePressurePlate();
 	void PressurePlate_OpenClose_Door(float FPSLimit);
+	float TotalMassOfActors() const;
+
+protected:
+	// Called when the game starts
+	virtual void BeginPlay() override;
 
 private:
 	float CurrentYaw;
@@ -37,6 +36,9 @@ private:
 	float CloseDoorYaw;
 	float CurrentTime = 0.f;
 	float DoorLastOpened = 0.f;
+
+	UPROPERTY (EditAnywhere)
+	float MassToOpenDoor = 64.f;
 
 	UPROPERTY(EditAnywhere)
 	float OpenDoor_Angle = 74.f;
@@ -51,7 +53,7 @@ private:
 	float DoorCloseSpeed = 0.5f;
 
 	UPROPERTY(EditAnywhere)
-	ATriggerVolume* PressurePlate;
+	ATriggerVolume* PressurePlate = nullptr;
 
 	UPROPERTY(EditAnywhere)
 	AActor* ObjectThatOpenDoor;

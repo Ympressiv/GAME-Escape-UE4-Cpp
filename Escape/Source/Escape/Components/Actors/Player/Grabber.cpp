@@ -19,7 +19,7 @@ UGrabber::UGrabber()
 void UGrabber::FindPhysicsHandle()
 {
 	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
-	if (PhysicsHandle == nullptr)
+	if (!PhysicsHandle)
 	{
 		UE_LOG(LogType, Error, TEXT("PhysincsHandle component is not attached to %s!"), *GetOwner()->GetName());
 	}
@@ -82,9 +82,11 @@ FVector UGrabber::PlayerVievPoint_Stats() const
 void UGrabber::Grab()
 {
 	FHitResult HitResult = GetFirstPhysicsBodyInReach();
+	AActor* ActorThatWasHitted = HitResult.GetActor();
 	UPrimitiveComponent* ComponentToGrab = HitResult.GetComponent();
-	if (HitResult.GetActor())
-	{
+	if (ActorThatWasHitted)
+	{	
+		if (!PhysicsHandle) {return;}
 		PhysicsHandle->GrabComponentAtLocation
 		(
 			ComponentToGrab,
@@ -95,6 +97,7 @@ void UGrabber::Grab()
 }
 void UGrabber::Drop()
 {
+	if (!PhysicsHandle) { return; }
 	PhysicsHandle->ReleaseComponent();
 }
 
@@ -102,6 +105,7 @@ void UGrabber::Drop()
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	if (!PhysicsHandle) { return; }
 	if (PhysicsHandle->GrabbedComponent)
 	{
 		PhysicsHandle->SetTargetLocation(PlayerVievPoint_Stats());

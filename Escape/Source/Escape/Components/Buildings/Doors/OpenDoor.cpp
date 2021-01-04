@@ -1,9 +1,12 @@
 // Copyright - Jakub Michalewicz 2020
 
 #include "OpenDoor.h"
+#include "Components/PrimitiveComponent.h"
 #include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
 #include "GameFramework/Actor.h"
+
+#define OUT
 
 // Sets default values for this component's properties
 UOpenDoor::UOpenDoor()
@@ -15,7 +18,6 @@ UOpenDoor::UOpenDoor()
 	// ...
 }
 
-
 // Called when the game starts
 void UOpenDoor::BeginPlay()
 {
@@ -24,17 +26,56 @@ void UOpenDoor::BeginPlay()
 	SecurePressurePlate();
 	ObjectThatOpenDoor = GetWorld()->GetFirstPlayerController()->GetPawn();
 }
+void UOpenDoor::SecurePressurePlate()
+{
+	if (!PressurePlate)
+	{
+		UE_LOG(LogTemp, Error, TEXT("%s has OpenDoor component on it but no pressureplate set!"), *GetOwner()->GetName());
+	}
+}
+
+// Initial value of yaw door rotation to known where was starting point
+void UOpenDoor::InitialValue()
+{
+	InitialYaw = GetOwner()->GetActorRotation().Yaw;
+	OpenDoor_Angle += InitialYaw;
+}
 
 // Called every frame
 void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	CurrentTime = GetWorld()->GetTimeSeconds();
-	//UE_LOG(LogTemp, Display, TEXT("Current time in game is: %f"), CurrentTime);
-
+	if (!PressurePlate) {return;}
 	PressurePlate_OpenClose_Door(DeltaTime);
 }
-
+void UOpenDoor::PressurePlate_OpenClose_Door(float FPSLimit)
+{
+	if (!PressurePlate) {return;}
+	if (PressurePlate && TotalMassOfActors() > MassToOpenDoor || PressurePlate->IsOverlappingActor(ObjectThatOpenDoor))
+	{
+		OpenTheDoor(FPSLimit);
+		DoorLastOpened = GetWorld()->GetTimeSeconds();
+	}
+	else
+	{
+		if (CurrentTime >= DoorLastOpened + DoorCloseDelay)
+		{
+			CloseTheDoor(FPSLimit);
+		}
+	}
+}
+float UOpenDoor::TotalMassOfActors() const
+{
+	float TotalMass = 0.f;
+	TArray<AActor*> OverlappingActors;
+	if (!PressurePlate) {return TotalMass;}
+	PressurePlate->GetOverlappingActors(OUT OverlappingActors);
+	for (AActor* MassOfActors:OverlappingActors)
+	{
+		TotalMass += MassOfActors->FindComponentByClass<UPrimitiveComponent>()->GetMass();
+	}
+	return TotalMass;
+}
 void UOpenDoor::OpenTheDoor(float FPSLimit)
 {
 	CurrentYaw = GetOwner()->GetActorRotation().Yaw;
@@ -48,31 +89,4 @@ void UOpenDoor::CloseTheDoor(float FPSLimit)
 	CloseDoorYaw = FMath::Lerp(CurrentYaw, InitialYaw, FPSLimit * DoorCloseSpeed);
 	FRotator CloseDoor(0.f, CloseDoorYaw, 0.f);
 	GetOwner()->SetActorRotation(CloseDoor);
-}
-void UOpenDoor::InitialValue()
-{
-	InitialYaw = GetOwner()->GetActorRotation().Yaw;
-	OpenDoor_Angle += InitialYaw;
-}
-void UOpenDoor::SecurePressurePlate()
-{
-	if (!PressurePlate)
-	{
-		UE_LOG(LogTemp, Error, TEXT("%s has OpenDoor component on it but no pressureplate set!"), *GetOwner()->GetName());
-	}
-}
-void UOpenDoor::PressurePlate_OpenClose_Door(float FPSLimit)
-{
-	if (PressurePlate && PressurePlate->IsOverlappingActor(ObjectThatOpenDoor))
-	{
-		OpenTheDoor(FPSLimit);
-		DoorLastOpened = GetWorld()->GetTimeSeconds();
-	}
-	else
-	{
-		if (CurrentTime >= DoorLastOpened + DoorCloseDelay)
-		{
-			CloseTheDoor(FPSLimit);
-		}
-	}
 }
