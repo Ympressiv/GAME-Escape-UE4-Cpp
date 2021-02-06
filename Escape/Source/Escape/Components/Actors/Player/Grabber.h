@@ -30,6 +30,9 @@ private:
 	FHitResult GetFirstPhysicsBodyInReach() const;
 	FVector PlayerVievPoint_Stats() const;
 	FVector GetPlayerWorldLocation() const;
+
+	UPROPERTY()
 	UPhysicsHandleComponent* PhysicsHandle = nullptr;
+	UPROPERTY()
 	UInputComponent* InputComponent = nullptr;
 };

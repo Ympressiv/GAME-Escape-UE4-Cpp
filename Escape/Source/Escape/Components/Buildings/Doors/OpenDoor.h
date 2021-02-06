@@ -23,6 +23,8 @@ public:
 	void InitialValue();
 	void SecurePressurePlate();
 	void PressurePlate_OpenClose_Door(float FPSLimit);
+	void SecureAudioComponent();
+	void PlayAudioComponent();
 	float TotalMassOfActors() const;
 
 protected:
@@ -36,6 +38,8 @@ private:
 	float CloseDoorYaw;
 	float CurrentTime = 0.f;
 	float DoorLastOpened = 0.f;
+	UPROPERTY()
+	UAudioComponent* AudioComponent = nullptr;
 
 	UPROPERTY (EditAnywhere)
 	float MassToOpenDoor = 64.f;
@@ -54,7 +58,4 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	ATriggerVolume* PressurePlate = nullptr;
-
-	UPROPERTY(EditAnywhere)
-	AActor* ObjectThatOpenDoor;
 };

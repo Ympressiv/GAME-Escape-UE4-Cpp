@@ -1,6 +1,7 @@
 // Copyright - Jakub Michalewicz 2020
 
 #include "OpenDoor.h"
+#include "Components/AudioComponent.h"
 #include "Components/PrimitiveComponent.h"
 #include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
@@ -24,13 +25,21 @@ void UOpenDoor::BeginPlay()
 	Super::BeginPlay();
 	InitialValue();
 	SecurePressurePlate();
-	ObjectThatOpenDoor = GetWorld()->GetFirstPlayerController()->GetPawn();
+	SecureAudioComponent();
 }
 void UOpenDoor::SecurePressurePlate()
 {
 	if (!PressurePlate)
 	{
 		UE_LOG(LogTemp, Error, TEXT("%s has OpenDoor component on it but no pressureplate set!"), *GetOwner()->GetName());
+	}
+}
+void UOpenDoor::SecureAudioComponent()
+{
+	AudioComponent = GetOwner()->FindComponentByClass<UAudioComponent>();
+	if (!AudioComponent)
+	{
+		UE_LOG(LogType, Error, TEXT("SC_OpenDoor audio component is not attached to %s."), *GetOwner()->GetName());
 	}
 }
 
@@ -47,11 +56,12 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	if (!PressurePlate) {return;}
 	PressurePlate_OpenClose_Door(DeltaTime);
+	CurrentTime = GetWorld()->GetTimeSeconds();
 }
 void UOpenDoor::PressurePlate_OpenClose_Door(float FPSLimit)
 {
 	if (!PressurePlate) {return;}
-	if (PressurePlate && TotalMassOfActors() > MassToOpenDoor || PressurePlate->IsOverlappingActor(ObjectThatOpenDoor))
+	if (PressurePlate && TotalMassOfActors() > MassToOpenDoor)
 	{
 		OpenTheDoor(FPSLimit);
 		DoorLastOpened = GetWorld()->GetTimeSeconds();
@@ -63,6 +73,10 @@ void UOpenDoor::PressurePlate_OpenClose_Door(float FPSLimit)
 			CloseTheDoor(FPSLimit);
 		}
 	}
+}
+void UOpenDoor::PlayAudioComponent()
+{
+	AudioComponent->Play();
 }
 float UOpenDoor::TotalMassOfActors() const
 {
@@ -81,7 +95,7 @@ void UOpenDoor::OpenTheDoor(float FPSLimit)
 	CurrentYaw = GetOwner()->GetActorRotation().Yaw;
 	OpenDoorYaw = FMath::Lerp(CurrentYaw, OpenDoor_Angle, FPSLimit * DoorOpenSpeed);
 	FRotator OpenDoor(0.f, OpenDoorYaw, 0.f);
-	GetOwner()->SetActorRotation(OpenDoor);
+	GetOwner()->SetActorRotation(OpenDoor); 
 }
 void UOpenDoor::CloseTheDoor(float FPSLimit)
 {
