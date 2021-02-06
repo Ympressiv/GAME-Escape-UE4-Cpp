@@ -24,7 +24,6 @@ public:
 	void SecurePressurePlate();
 	void PressurePlate_OpenClose_Door(float FPSLimit);
 	void SecureAudioComponent();
-	void PlayAudioComponent();
 	float TotalMassOfActors() const;
 
 protected:
@@ -38,6 +37,9 @@ private:
 	float CloseDoorYaw;
 	float CurrentTime = 0.f;
 	float DoorLastOpened = 0.f;
+	bool bOpenDoorSound = false;
+	bool bCloseDoorSound = true;
+
 	UPROPERTY()
 	UAudioComponent* AudioComponent = nullptr;
 

@@ -74,10 +74,6 @@ void UOpenDoor::PressurePlate_OpenClose_Door(float FPSLimit)
 		}
 	}
 }
-void UOpenDoor::PlayAudioComponent()
-{
-	AudioComponent->Play();
-}
 float UOpenDoor::TotalMassOfActors() const
 {
 	float TotalMass = 0.f;
@@ -96,6 +92,13 @@ void UOpenDoor::OpenTheDoor(float FPSLimit)
 	OpenDoorYaw = FMath::Lerp(CurrentYaw, OpenDoor_Angle, FPSLimit * DoorOpenSpeed);
 	FRotator OpenDoor(0.f, OpenDoorYaw, 0.f);
 	GetOwner()->SetActorRotation(OpenDoor); 
+	bCloseDoorSound = false;
+	if (!AudioComponent) {return;}
+	if (!bOpenDoorSound)
+	{
+		AudioComponent->Play();
+		bOpenDoorSound = true;
+	}
 }
 void UOpenDoor::CloseTheDoor(float FPSLimit)
 {
@@ -103,4 +106,11 @@ void UOpenDoor::CloseTheDoor(float FPSLimit)
 	CloseDoorYaw = FMath::Lerp(CurrentYaw, InitialYaw, FPSLimit * DoorCloseSpeed);
 	FRotator CloseDoor(0.f, CloseDoorYaw, 0.f);
 	GetOwner()->SetActorRotation(CloseDoor);
+	bOpenDoorSound = false;
+	if (!AudioComponent) {return;}
+	if (!bCloseDoorSound)
+	{
+		AudioComponent->Play();
+		bCloseDoorSound = true;
+	}
 }
